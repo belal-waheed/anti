@@ -1,0 +1,9 @@
+{
+  "name": "starter-plugin-template",
+  "version": "1.0.0",
+  "description": "Ready-to-use template for packaging skills, rules, hooks, and MCP servers into a single plugin bundle.",
+  "author": {
+    "name": "Engineering Team"
+  },
+  "license": "Apache-2.0"
+}
