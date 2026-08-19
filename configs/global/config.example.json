@@ -1,0 +1,30 @@
+{
+  "plugins": {
+    "google-antigravity-sdk": {
+      "enabled": true
+    },
+    "modern-web-guidance-plugin": {
+      "enabled": true
+    }
+  },
+  "userSettings": {
+    "conversationWidth": "CONVERSATION_WIDTH_WIDE",
+    "customThemeSeedsDark": {
+      "background": "#282A36",
+      "foregroundOverride": "#F8F8F2",
+      "primary": "#BD93F9"
+    },
+    "customThemeSeedsLight": {
+      "background": "#EEEEEE",
+      "foregroundOverride": "#101010",
+      "primary": "#007acc"
+    },
+    "globalPermissionGrants": {
+      "allow": [
+        "command(pwsh -NoProfile -Command \"npm test\")",
+        "command(pwsh -NoProfile -Command \"npm run build\")",
+        "command(pwsh -NoProfile -Command \"python --version\")"
+      ]
+    }
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "safety-gate": {
+    "enabled": true,
+    "PreToolUse": [
+      {
+        "matcher": "run_command",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python -c \"import sys, json; data=json.load(sys.stdin); cmd=data.get('toolCall',{}).get('args',{}).get('CommandLine',''); blocked=['rm -rf /', 'format c:', 'drop database']; sys.exit(1 if any(b in cmd.lower() for b in blocked) else 0)\"",
+            "timeout": 5
+          }
+        ]
+      }
+    ]
+  },
+  "lint-check": {
+    "enabled": true,
+    "PostToolUse": [
+      {
+        "matcher": "write_to_file|replace_file_content",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python -c \"import sys; sys.exit(0)\"",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  }
+}
