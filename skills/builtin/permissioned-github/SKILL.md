@@ -59,6 +59,12 @@ resource_json has the following fields:
     - create: to push a new branch.
     - update: to push to an existing remote branch (including force-push).
     - delete: to delete a remote branch.
+- path: Optional workflow file path. Use '*' to indicate all workflow paths.
+  Only paths are supported (e.g. '.github/workflows/ci.yml' or 'ci.yml'), not workflow display names or numeric IDs.
+  Supported actions:
+    - dispatch: to trigger a workflow run (`gh workflow run`). Also requires a `ref` field. No `git.read` grant is needed.
+    - read: to list, view, and watch workflow **runs** (`gh run list`, `gh run view`, `gh run watch`). This action is repository-wide ONLY: it must be granted with `path: '*'` and `ref: '*'` (any narrower scope is rejected), because run IDs are opaque and cannot be tied back to a specific workflow file or ref. `gh run rerun` is NOT supported. `read` is about workflow **runs** only: `gh workflow list` and `gh workflow view` (the repository's workflow definitions) are NOT supported (clone/fetch the workflow files via a `git.read`-gated path instead).
+- ref: Optional git ref for workflows (the workflow's `--ref`). Use '*' to indicate any ref. Matched by name; the value may be a branch or a tag. For the `read` action it must be '*'.
 
 **Other operations are not supported and the corresponding permission will not be granted. If you need support, stop immediately and tell the user you cannot proceed and why.**
 
@@ -139,17 +145,43 @@ Permission: `git.read({"org": "myorg", "repo": "myrepo", "contents": "*"})`
 
 *Note: commit search reuses the **git** read permission, so request a `git.*` grant, not a `gh.*` grant.*
 
+### Example 12: Searching Code
+
+Command: `gh search code -R myorg/myrepo "func main"`
+Permission: `git.read({"org": "myorg", "repo": "myrepo", "contents": "*"})`
+
+*Note: code search reads repository file contents, so it reuses the **git** read permission (same as clone/fetch and commit search), not a `gh.*` grant.*
+
+### Example 13: Searching Issues
+
+Command: `gh search issues -R myorg/myrepo --author alice`
+Permission: `gh.read({"org": "myorg", "repo": "myrepo", "issue": "*"})`
+
+*Note: for an organization-wide search, use `--owner myorg` in the command; the grant then uses `repo: "*"`.*
+
+### Example 14: Running (Dispatching) a Workflow
+
+Command: `gh workflow run ci.yml --ref main -R myorg/myrepo`
+Permission: `workflow.dispatch({"org": "myorg", "repo": "myrepo", "path": "ci.yml", "ref": "main"})`
+
+*Note: the workflow argument must be an existing workflow **file** at the target `ref` (not a display name or numeric ID), and an explicit `--ref` is required.*
+
+### Example 15: Listing, Viewing, or Watching Workflow Runs
+
+Command: `gh run list -R myorg/myrepo` (also `gh run view <run-id> -R ...`, `gh run watch <run-id> -R ...`)
+Permission: `workflow.read({"org": "myorg", "repo": "myrepo", "path": "*", "ref": "*"})`
+
+*Note: `read` is repository-wide only -- `path` and `ref` must both be `'*'`. It covers `gh run list/view/watch` (workflow **runs**).*
+
 
 ## How and When to Ask for Permissions
 
 **You should only ask for permissions if the command failed. Each time you ask for a permission, it will prompt the user. Be mindful to only ask when you know the command fails to provide a good user experience.**
 
-When you have determined that you need permisison:
+When you have determined that you need permission:
 
-1. Constuct the permission string <permission-string> as per previous section.
-2. Call the tool `ask_permission`:
-  - Set Action="custom", Target=<permission-string>
-  - Do not set BypassSandbox.
-3. Run the original command that was denied.
+1. Construct the permission string as shown for the action (see the examples above).
+2. Call the `ask_custom_permission` tool for the required permission.
+3. Retry the original action that was blocked.
 
 **Never try to pipe or redirect output of the gh command, it will not work in your environment**

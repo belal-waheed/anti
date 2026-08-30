@@ -32,8 +32,9 @@ Type            | Config File/Folder           | Scope                     | Bes
 
 ## Customization Discovery and Locations
 
-Antigravity automatically discovers customizations by traversing specific
-directories.
+Antigravity automatically discovers your own customizations by traversing
+specific directories. Built-in customizations are not found this way: the agent
+config names the ones it mounts.
 
 ### Discovery Locations
 
@@ -67,7 +68,8 @@ The priority order (from highest to lowest) is:
 2.  **Declared Configurations**: Customizations explicitly listed in
     `skills.json` or `plugins.json` in your workspace.
 3.  **Global Discovery**: `~/.gemini/config/`
-4.  **Built-in Customizations**: Default skills bundled with the application.
+4.  **Built-in Customizations**: Default skills bundled with the application,
+    mounted by name rather than discovered.
 5.  **Global Declared Configurations**: Explicitly listed in global JSON
     configs.
 

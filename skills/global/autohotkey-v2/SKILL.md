@@ -164,11 +164,16 @@ class NotifyService {
 
 ## 6. Headless Compilation via Ahk2Exe CLI
 
-Automate compilation via PowerShell:
+Automate compilation silently via PowerShell with timeout protection and `/silent` flag:
 
 ```powershell
-pwsh -NoProfile -Command "Start-Process 'C:\Program Files\AutoHotkey\Compiler\Ahk2Exe.exe' -ArgumentList '/in \"<Source.ahk>\" /out \"<Target.exe>\" /icon \"<Icon.ico>\" /base \"C:\Program Files\AutoHotkey\v2\AutoHotkey64.exe\"' -Wait"
+pwsh -NoProfile -Command '$p = Start-Process -FilePath "C:\Program Files\AutoHotkey\Compiler\Ahk2Exe.exe" -ArgumentList @("/in", "<Source.ahk>", "/out", "<Target.exe>", "/icon", "<Icon.ico>", "/silent") -PassThru; $p.WaitForExit(10000); if (-not $p.HasExited) { $p.Kill(); Write-Error "Ahk2Exe timed out" }'
 ```
+
+### Headless Compilation Invariants:
+1. **Always pass `/silent`**: Prevents Ahk2Exe from opening interactive GUI message boxes or dialogs upon completion or syntax notice.
+2. **Omit manual `/base` path**: Ahk2Exe v2 auto-detects the matching base runtime from `#Requires AutoHotkey v2.0`.
+3. **Always use timeout protection (`.WaitForExit(10000)`)**: Never use an unbounded `-Wait` flag on GUI-capable Windows binaries.
 
 ---
 
@@ -181,7 +186,7 @@ Scope hotkeys strictly to target applications using `#HotIf`:
 
 ; Ctrl + Shift + N -> Quick Task Note
 ^+n:: {
-    vaultPath := "d:\belal\obsidian\hola"
+    vaultPath := "D:/dev/obsidian/hola"
     timestamp := FormatTime(, "yyyy-MM-dd_HH-mm")
     notePath := vaultPath . "\03-inbox\Task-" . timestamp . ".md"
     
@@ -240,3 +245,4 @@ class Assert {
 - Never write to registry on every launch without checking whether values have changed.
 - Never call methods on destroyed GUI handles without `IsObject()` checks.
 - Never place overlapping child controls on the same coordinate plane.
+

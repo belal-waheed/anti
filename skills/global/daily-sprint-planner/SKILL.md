@@ -43,11 +43,11 @@ Activate this skill whenever:
 ### Step-by-Step Procedure:
 1. **Determine Current Date & ISO Week**:
    - Extract current date (e.g. `2026-08-18`), weekday (`Tuesday`), and ISO week (`Week-2026-W34`).
-2. **Inspect [`inbox/Today.md`](file:///d:/belal/obsidian/hola/inbox/Today.md)**:
+2. **Inspect [`inbox/Today.md`](file:///D:/dev/obsidian/hola/inbox/Today.md)**:
    - Check the frontmatter `date:`.
    - **If the note is from a previous day**:
      - Extract any unfinished tasks (`- [ ] ...`) and daily reflections.
-     - Append them into the active sprint note ([`sprints/Week-2026-W34.md`](file:///d:/belal/obsidian/hola/sprints/Week-2026-W34.md)) under `## Carried-Over & Backlog Tasks`.
+     - Append them into the active sprint note ([`sprints/Week-2026-W34.md`](file:///D:/dev/obsidian/hola/sprints/Week-2026-W34.md)) under `## Carried-Over & Backlog Tasks`.
      - Reset `Today.md` with today's date, day, and week link.
 3. **Establish "The Frog" (Top 3 Priority Actions)**:
    - Identify the 3 most impactful tasks for today with the user.
@@ -70,12 +70,12 @@ Activate this skill whenever:
 
 ### Step-by-Step Procedure:
 1. **Locate / Create Sprint Note**:
-   - Target path: [`sprints/Week-YYYY-Wxx.md`](file:///d:/belal/obsidian/hola/sprints/) (e.g., `sprints/Week-2026-W34.md`).
-   - If not present, initialize using [`system/templates/Weekly-Sprint.md`](file:///d:/belal/obsidian/hola/system/templates/Weekly-Sprint.md).
+   - Target path: [`sprints/Week-YYYY-Wxx.md`](file:///D:/dev/obsidian/hola/sprints/) (e.g., `sprints/Week-2026-W34.md`).
+   - If not present, initialize using [`system/templates/Weekly-Sprint.md`](file:///D:/dev/obsidian/hola/system/templates/Weekly-Sprint.md).
 2. **Define Top 3 Weekly Priorities**:
    - Formulate 3 high-impact milestones under `## Top Priorities This Week` tagged with `#week`.
 3. **Update Key Project Deliverables Table**:
-   - Matrix active projects ([`projects/loop/`](file:///d:/belal/obsidian/hola/projects/loop), [`projects/o2om/`](file:///d:/belal/obsidian/hola/projects/o2om), [`projects/portfolio/`](file:///d:/belal/obsidian/hola/projects/portfolio), [`projects/markbel/`](file:///d:/belal/obsidian/hola/projects/markbel)).
+   - Matrix active projects ([`projects/loop/`](file:///D:/dev/obsidian/hola/projects/loop), [`projects/o2om/`](file:///D:/dev/obsidian/hola/projects/o2om), [`projects/portfolio/`](file:///D:/dev/obsidian/hola/projects/portfolio), [`projects/markbel/`](file:///D:/dev/obsidian/hola/projects/markbel)).
    - Set deliverables, target dates, and statuses (`Planned` | `In Progress` | `Completed`).
 4. **Reconcile Carried-Over Tasks**:
    - Review backlog tasks from previous sprints and assign them or prioritize them.
@@ -97,17 +97,17 @@ Activate this skill whenever:
 ```
 
 1. **Step 1: Task Check-Off**:
-   - Find matching task items in [`inbox/Today.md`](file:///d:/belal/obsidian/hola/inbox/Today.md) (The Frog or Execution Checklist) and [`sprints/Week-YYYY-Wxx.md`](file:///d:/belal/obsidian/hola/sprints/).
+   - Find matching task items in [`inbox/Today.md`](file:///D:/dev/obsidian/hola/inbox/Today.md) (The Frog or Execution Checklist) and [`sprints/Week-YYYY-Wxx.md`](file:///D:/dev/obsidian/hola/sprints/).
    - Mark them completed: `- [x] Task name #today`.
 2. **Step 2: Project Hub Sync**:
-   - Open the corresponding folder note ([`projects/<project>/_<project>.md`](file:///d:/belal/obsidian/hola/projects/)).
+   - Open the corresponding folder note ([`projects/<project>/_<project>.md`](file:///D:/dev/obsidian/hola/projects/)).
    - Update project status, milestone deliverables, and link any newly created deployment/architecture guides.
 3. **Step 3: Living Technical Documentation**:
    - If new architecture, API routes, database schemas, or deployment pipelines were created:
      - Update or create living docs in `projects/<project>/` or `areas/tech/<domain>/`.
      - Include clear Mermaid sequence/architecture diagrams when appropriate.
 4. **Step 4: Daily Technical Scratchpad & Decision Log**:
-   - Under `## Daily Scratchpad & Notes` in [`inbox/Today.md`](file:///d:/belal/obsidian/hola/inbox/Today.md), append concise bullets:
+   - Under `## Daily Scratchpad & Notes` in [`inbox/Today.md`](file:///D:/dev/obsidian/hola/inbox/Today.md), append concise bullets:
      - What was implemented / resolved.
      - Key commands executed, test results, or endpoints created.
      - Important architectural decisions or environment variables configured.
@@ -124,13 +124,13 @@ Activate this skill whenever:
 ### Step-by-Step Procedure:
 1. **Audit Completed vs. Pending Tasks**:
    - Review which of today's frogs and checklist items were completed.
-2. **Complete End-of-Day Reflection in [`inbox/Today.md`](file:///d:/belal/obsidian/hola/inbox/Today.md)**:
+2. **Complete End-of-Day Reflection in [`inbox/Today.md`](file:///D:/dev/obsidian/hola/inbox/Today.md)**:
    - Fill in:
      - `- **Energy / Focus:**` [High | Medium | Low]
      - `- **What went well:**` [Highlights of the day]
      - `- **What was blocked:**` [Blockers or pending dependencies]
 3. **Rollover Unfinished Tasks**:
-   - Copy any incomplete tasks from `Today.md` into the active weekly sprint note ([`sprints/Week-YYYY-Wxx.md`](file:///d:/belal/obsidian/hola/sprints/)) under `## Carried-Over & Backlog Tasks`.
+   - Copy any incomplete tasks from `Today.md` into the active weekly sprint note ([`sprints/Week-YYYY-Wxx.md`](file:///D:/dev/obsidian/hola/sprints/)) under `## Carried-Over & Backlog Tasks`.
 4. **Prepare Tomorrow**:
    - Set up `Today.md` for the following morning or keep it clean for the next morning kickoff.
 
@@ -146,7 +146,7 @@ Activate this skill whenever:
      - `- [ ] Meeting with client at 10:30 am #today`
      - `- [ ] Standup @ 14:00 #today`
      - `- [ ] 09:30 AM Sprint review #today`
-   - These will be automatically picked up by [`ob-hola.ahk`](file:///d:/belal/obsidian/hola/system/scripts/ob-hola.ahk) and [`cloud-notifier.js`](file:///d:/belal/obsidian/hola/system/scripts/cloud-notifier.js) for desktop toasts and mobile push notifications.
+   - These will be automatically picked up by [`ob-hola.ahk`](file:///D:/dev/obsidian/hola/system/scripts/ob-hola.ahk) and [`cloud-notifier.js`](file:///D:/dev/obsidian/hola/system/scripts/cloud-notifier.js) for desktop toasts and mobile push notifications.
 3. **Preserve Navigation & Dataview JS**:
    - Always preserve the `> [!NAV] Navigation` callout and Dataview blocks at the bottom of notes.
 
@@ -158,3 +158,4 @@ Activate this skill whenever:
 - Do not remove existing note frontmatter or overwrite user scratchpad notes without archiving them to the weekly sprint.
 - Do not let completed coding work pass without immediately executing the 4-step post-work reconciliation protocol.
 - Do not use emojis in headers or task text unless explicitly requested.
+

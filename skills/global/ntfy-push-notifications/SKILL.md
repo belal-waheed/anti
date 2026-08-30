@@ -1,89 +1,35 @@
 ---
 name: ntfy-push-notifications
-description: Conventions and patterns for ntfy.sh and self-hosted ntfy push notification integration across Node.js, PowerShell, cURL, and GitHub Actions. Covers interactive action buttons, deep links, priority levels, markdown formatting, and mobile push automation.
+description: Conventions and patterns for ntfy.sh and self-hosted ntfy push notification integration across Node.js, PowerShell, cURL, and GitHub Actions. Covers interactive action buttons, deep links, priority levels, markdown formatting, and mobile push automation. Use when sending alerts or mobile push notifications.
 ---
 
 # ntfy Push Notifications Guide
 
-## When to use this skill
-Trigger whenever building, debugging, or configuring push notifications to mobile devices (iOS / Android) or desktops using ntfy.sh or self-hosted ntfy instances.
+Runbook for dispatching formatted mobile push notifications with interactive deep links via ntfy.sh.
 
----
-
-## 1. Core Architecture & HTTP Request Standards
-
-ntfy notifications can be published using simple HTTP POST or PUT requests. All metadata is controlled via HTTP headers or JSON payload bodies.
-
-### Primary Headers Matrix
+## 1. Core Architecture & HTTP Headers
 
 | Header | Example Value | Description |
 | :--- | :--- | :--- |
-| `Title` | `Today Tasks` | Sets the notification title (use clean ASCII to prevent emoji clutter) |
-| `Priority` | `high` | `min`, `low`, `default`, `high`, `urgent` (`high`/`urgent` produce sound and vibration) |
-| `Markdown` / `X-Markdown` | `yes` | Enables full Markdown parsing in the notification body |
-| `Click` | `obsidian://open?vault=hola&file=inbox/Today` | URL or app URI to open when the notification body is tapped |
-| `Actions` | `view, Open Today, obsidian://open?...; view, Dashboard, ...` | Interactive buttons placed directly on the notification card |
+| `Title` | `Goal Complete` | Notification title (clean ASCII without emoji clutter) |
+| `Priority` | `high` | `min`, `low`, `default`, `high`, `urgent` (`high` triggers sound/vibration) |
+| `Markdown` | `yes` | Enables markdown rendering in notification body |
+| `Click` | `obsidian://open?vault=hola&file=inbox/Today` | URI opened when tapping notification body |
+| `Actions` | `view, Review Today, obsidian://...; view, Dashboard, ...` | Interactive buttons placed on notification card |
 
 ---
 
-## 2. Interactive Action Buttons (`Actions` Header)
-
-Action buttons allow users to take immediate action directly from the notification shade or lock screen.
-
-### Action Types:
-- **`view`**: Opens an HTTP URL or local app URI scheme (e.g. `obsidian://`, `notion://`).
-- **`http`**: Sends an HTTP request in the background without opening an app.
-- **`broadcast`**: Sends an Android broadcast intent.
-
-### Syntax Example:
-```text
-Actions: view, Open Today, obsidian://open?vault=hola&file=inbox/Today; view, Dashboard, obsidian://open?vault=hola&file=Dashboard
-```
-
----
-
-## 3. Implementation Patterns
-
-### Node.js (HTTPS)
-```javascript
-const https = require('https');
-
-function sendNtfy(topic, title, body, clickUrl) {
-    const payload = Buffer.from(body, 'utf8');
-    const headers = {
-        'Title': title,
-        'Priority': 'high',
-        'Markdown': 'yes',
-        'Click': clickUrl,
-        'Actions': 'view, Open Today, obsidian://open?vault=hola&file=inbox/Today; view, Dashboard, obsidian://open?vault=hola&file=Dashboard',
-        'Content-Type': 'text/markdown; charset=utf-8',
-        'Content-Length': payload.length
-    };
-
-    const req = https.request({
-        hostname: 'ntfy.sh',
-        port: 443,
-        path: `/${topic}`,
-        method: 'POST',
-        headers: headers
-    }, (res) => {
-        // Handle response
-    });
-
-    req.write(payload);
-    req.end();
-}
-```
+## 2. Implementation Patterns
 
 ### PowerShell (`Invoke-RestMethod`)
 ```powershell
 $NtfyUrl = "https://ntfy.sh/$NtfyTopic"
 $Headers = @{
-    "Title"     = "Today Tasks"
+    "Title"     = "Sprint Sync Complete"
     "Priority"  = "high"
     "Markdown"  = "yes"
     "Click"     = "obsidian://open?vault=hola&file=inbox/Today"
-    "Actions"   = "view, Open Today, obsidian://open?vault=hola&file=inbox/Today; view, Dashboard, obsidian://open?vault=hola&file=Dashboard"
+    "Actions"   = "view, Review Today, obsidian://open?vault=hola&file=inbox/Today; view, Dashboard, obsidian://open?vault=hola&file=Dashboard"
 }
 $Utf8Bytes = [System.Text.Encoding]::UTF8.GetBytes($Message)
 Invoke-RestMethod -Uri $NtfyUrl -Method Post -Body $Utf8Bytes -Headers $Headers -ContentType "text/markdown; charset=utf-8"
@@ -91,8 +37,20 @@ Invoke-RestMethod -Uri $NtfyUrl -Method Post -Body $Utf8Bytes -Headers $Headers 
 
 ---
 
-## 4. Best Practices & Guidelines
+## 3. Verification & Testing
 
-- **Zero Emojis in Headers**: Avoid passing random emojis or emoji tags unless specifically requested. Use clean ASCII titles.
-- **Always Send Explicit UTF-8**: Ensure notification bodies are encoded as UTF-8 bytes to prevent double-encoding/mojibake.
-- **Deep Links**: Use official app URI schemes (such as `obsidian://open?vault=...&file=...`) for instant 1-tap navigation to relevant notes.
+Validate notification delivery:
+1. **Dry-Run Curl Test:**
+   ```bash
+   pwsh -NoProfile -Command "Invoke-RestMethod -Uri 'https://ntfy.sh/belal-hola-vault' -Method Post -Body 'Test Notification' -Headers @{ Title = 'Antigravity Test'; Priority = 'default' }"
+   ```
+2. **Action Button URL Verification:** Verify `obsidian://open?vault=...` links resolve to actual vault paths.
+3. **UTF-8 Encoding Check:** Test Arabic/non-Latin strings to ensure zero mojibake or question mark corruptions.
+
+---
+
+## 4. Common Pitfalls & Negative Constraints
+
+- **Never omit explicit UTF-8 encoding:** String payloads must be converted to UTF-8 bytes to prevent character corruption.
+- **Never add emoji icons to Title headers:** Keep notification titles clean and professional.
+- **Avoid unescaped commas in Actions header:** Separate multiple actions with semicolons (`;`).

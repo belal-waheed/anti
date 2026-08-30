@@ -17,8 +17,8 @@ plugins/<plugin_name>/
 ├── plugin.json       # Required: Manifest file
 ├── mcp_config.json   # Optional: MCP servers exposed by the plugin
 ├── hooks.json        # Optional: Lifecycle hooks run by the plugin
-├── rules/            # Optional: Rules applied when plugin is active
-│   └── *.md
+├── rules/            # Optional: Rules applied when plugin is active (AGENTS.md recommended)
+│   └── AGENTS.md
 └── skills/           # Optional: Skills exposed by the plugin
     └── <skill_name>/
         └── SKILL.md
@@ -55,7 +55,8 @@ When a plugin is discovered and enabled:
     *   **MCP Servers** defined in `plugins/<name>/mcp_config.json` are
         launched, and their tools are made available.
     *   **Rules** in `plugins/<name>/rules/` are merged into the active rule
-        set.
+        set. Placing a consolidated **`AGENTS.md`** (or `GEMINI.md`) file under
+        `rules/` (e.g., `rules/AGENTS.md`) is recommended over separate rule files.
 
 ## Registering Plugins
 

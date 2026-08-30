@@ -14,8 +14,8 @@ Trigger whenever creating, editing, or re-structuring markdown notes, templates,
 
 | Folder | Purpose | Standard Content / Notes |
 |:---|:---|:---|
-| **`inbox/`** | Fast capture & active daily execution | [`inbox/Today.md`](file:///d:/belal/obsidian/hola/inbox/Today.md) (rolling daily note), [`inbox/Inbox.md`](file:///d:/belal/obsidian/hola/inbox/Inbox.md) |
-| **`sprints/`** | Weekly sprint cycles & backlog rollover | [`sprints/Week-YYYY-Wxx.md`](file:///d:/belal/obsidian/hola/sprints/), `_sprints.md` |
+| **`inbox/`** | Fast capture & active daily execution | [`inbox/Today.md`](file:///D:/dev/obsidian/hola/inbox/Today.md) (rolling daily note), [`inbox/Inbox.md`](file:///D:/dev/obsidian/hola/inbox/Inbox.md) |
+| **`sprints/`** | Weekly sprint cycles & backlog rollover | [`sprints/Week-YYYY-Wxx.md`](file:///D:/dev/obsidian/hola/sprints/), `_sprints.md` |
 | **`projects/`** | Dedicated project workspaces | `projects/[name]/_[name].md` (hub), guides, task lists |
 | **`areas/`** | Long-term knowledge base & domains | `areas/tech/backend/`, `areas/tech/frontend/`, `areas/career/` |
 | **`resources/`** | Reference library & bookmarks | `resources/articles/`, `resources/bookmarks/` |
@@ -137,3 +137,4 @@ GROUP BY file.link
 - Avoid loose markdown files in the root folder (route them into `inbox/`, `projects/`, `areas/`, or `resources/`).
 - Avoid mixing emojis in task headers or notes unless explicitly requested.
 - Avoid broken wikilinks by verifying target note names.
+

@@ -5,29 +5,19 @@ description: Conventions for React and TypeScript frontend architecture with Vit
 
 # Modern React & TypeScript Architecture Guide
 
-## When to use this skill
-Trigger whenever developing or structuring React applications with TypeScript (Vite SPAs, Next.js, or shared component libraries), writing custom hooks, or creating frontend feature modules.
-
----
+Runbook for constructing scalable, type-safe React applications using feature-sliced architecture.
 
 ## 1. Feature-Sliced Architecture
 
-Organize code by business domain/feature rather than technical type:
-
 ```
 src/
-  ├── assets/          # Static assets & SVGs
   ├── components/      # Shared primitive UI components (Button, Modal, Input)
   ├── features/        # Feature modules
   │    └── auth/
   │         ├── components/
-  │         │    └── LoginForm.tsx
   │         ├── hooks/
-  │         │    └── useAuth.ts
   │         ├── services/
-  │         │    └── authApi.ts
   │         └── types/
-  │              └── auth.types.ts
   ├── hooks/           # App-wide custom hooks
   ├── lib/             # Shared utilities (cn, formatting)
   └── routes/          # Application routing / pages
@@ -35,68 +25,71 @@ src/
 
 ---
 
-## 2. Production Custom Hook Pattern with AbortController
+## 2. Custom Hook Pattern with AbortController
 
-Always support request cancellation to prevent race conditions and memory leaks:
+Always support request cancellation to prevent race conditions:
 
 ```ts
-// src/features/projects/hooks/useProject.ts
 import { useState, useEffect } from 'react';
-import type { Project } from '../types/project.types';
-import { fetchProjectById } from '../services/projectApi';
 
-interface UseProjectState {
-  project: Project | null;
-  isLoading: boolean;
-  error: string | null;
-}
-
-export function useProject(projectId: string): UseProjectState {
-  const [state, setState] = useState<UseProjectState>({
-    project: null,
-    isLoading: true,
-    error: null,
-  });
+export function useProject(projectId: string) {
+  const [data, setData] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const controller = new AbortController();
 
     async function load() {
-      setState((prev) => ({ ...prev, isLoading: true, error: null }));
+      setIsLoading(true);
       try {
-        const data = await fetchProjectById(projectId, controller.signal);
-        setState({ project: data, isLoading: false, error: null });
+        const res = await fetch(`/api/projects/${projectId}`, { signal: controller.signal });
+        const json = await res.json();
+        setData(json);
       } catch (err: any) {
-        if (err.name !== 'AbortError') {
-          setState({ project: null, isLoading: false, error: err.message || 'Failed to fetch project' });
-        }
+        if (err.name !== 'AbortError') console.error(err);
+      } finally {
+        setIsLoading(false);
       }
     }
 
     load();
-
-    return () => {
-      controller.abort();
-    };
+    return () => controller.abort();
   }, [projectId]);
 
-  return state;
+  return { data, isLoading };
 }
 ```
 
 ---
 
-## 3. Component Composition & State Colocation
+## 3. Component Composition & Colocation
 
-- **Colocate State**: Keep state inside the lowest possible component tree node where it is consumed.
-- **Compound Components**: For complex components (e.g. `Dialog`, `Dropdown`, `Tabs`), use compound patterns rather than passing 10+ configuration props.
-- **Explicit Prop Types**: Never use `any` or loose `Record<string, any>` for component props.
+- **Colocate State:** Keep state inside the lowest component consuming it.
+- **Compound Components:** Use composition for complex modals and dropdowns rather than prop-drilling 10+ booleans.
+- **Typed Props:** Never use `any` for component props.
 
 ---
 
-## Things to Avoid
+## 4. Verification & Testing
 
-- Avoid prop drilling past 2 levels; lift to Context or state manager.
-- Never omit dependency arrays or cleanup return functions in `useEffect` when subscribing to events or fetching data.
-- Avoid using indexes as React keys for lists that can reorder, filter, or delete items.
-- Avoid mixing business logic and raw fetch calls directly inside presentation JSX components.
+Validate component rendering and custom hook lifecycles:
+1. **Unit & Hook Testing (RTL + Vitest):**
+   ```bash
+   npm test -- useProject.test.ts
+   ```
+2. **Component Snapshot & Accessibility:**
+   ```bash
+   npm test -- Button.test.tsx
+   ```
+3. **Type-Check Run:**
+   ```bash
+   npm run type-check || npx tsc --noEmit
+   ```
+
+---
+
+## 5. Common Pitfalls & Negative Constraints
+
+- **Never omit useEffect cleanup:** Always return abort or unsubscribe functions.
+- **Never use array index as key:** Use unique stable entity IDs (`task.id`).
+- **Never put raw fetch calls in JSX:** Abstract API requests into feature services.

@@ -5,75 +5,55 @@ description: Design craftsmanship and visual guidelines for building bespoke, hi
 
 # UI/UX Design Craftsmanship & Anti-AI-Generic Design Guide
 
-## When to use this skill
-Trigger whenever designing, styling, or evaluating user interfaces, picking color palettes, establishing typography hierarchies, structuring spatial layouts, designing micro-interactions, or building bespoke product aesthetics.
+Design standards for bespoke, high-craft, accessible interfaces without generic AI clichés.
+
+## 1. Core Craftsmanship Principles
+
+1. **Reject AI Clichés:** No generic dark-slate + neon purple gradients. Build intentional color schemes tailored to the domain.
+2. **Zero Emojis in UI:** Use clean SVG vector icons (Lucide, Heroicons, Radix Icons).
+3. **Intentional Typography:** Pair a distinctive display header (e.g. *Outfit*, *Space Grotesk*) with a clean body sans (*Inter*, *Plus Jakarta Sans*).
+4. **8px Spatial Grid:** All margins, paddings, and gaps must follow strict 8px increments (8, 16, 24, 32, 48, 64px).
+5. **Interactive States:** Every interactive element must define Default, Hover (150ms), Active (`scale(0.98)`), and Focus-Visible rings.
 
 ---
 
-## 1. The Anti-AI-Generic Design Philosophy
+## 2. Aesthetic Archetypes
 
-1. **Reject AI Clichés**: Avoid generic dark slate backgrounds with purple/cyan neon gradients and emoji-stuffed buttons. Every application must feel purposefully crafted for its specific domain.
-2. **Zero Emojis in UI**: Use clean, precise vector icons (Lucide, Heroicons, Radix Icons) instead of emojis. Emojis render inconsistently across platforms and degrade visual professionalism.
-3. **Intentional Typography**: Pair a distinctive display font for headings with a high-legibility sans-serif for body text.
-4. **Perceptual Color Harmony**: Use curated OKLCH or tailored HSL color ramps with distinct foreground/background contrast (WCAG AA minimum 4.5:1 for normal text).
-5. **Generous Spatial Rhythm**: Build layouts strictly on an 8px grid (8, 16, 24, 32, 48, 64px) with ample breathing room.
+- **Technical Swiss Precision:** Deep obsidian (`oklch(0.14 0.01 260)`), slate borders, electric blue accent (`oklch(0.65 0.19 250)`), JetBrains Mono + Inter.
+- **Editorial Elegance:** Warm cream (`oklch(0.98 0.01 60)`), charcoal body (`oklch(0.20 0.02 60)`), serif headers (Newsreader) + clean body sans.
+- **Modern Obsidian Dark:** Neutral graphite (`#161618`), card elevation (`#1E1E22`), amber/gold accent (`#E5A93C`), Outfit + Inter.
 
 ---
 
-## 2. Curated Aesthetic Archetypes
+## 3. Spatial & Elevation Tokens
 
-When starting a project, select a deliberate aesthetic archetype:
+```css
+/* 8px Spatial Grid */
+--space-1: 4px;   /* Micro padding, icon gap */
+--space-2: 8px;   /* Button inline gap */
+--space-3: 12px;  /* Compact card padding */
+--space-4: 16px;  /* Standard card padding */
+--space-6: 24px;  /* Section spacing */
+--space-8: 32px;  /* Container gutters */
 
-### A. Technical Swiss Precision (Developer Tools, Dashboards, IDEs)
-- **Palette**: Deep obsidian black (`oklch(0.14 0.01 260)`), slate borders (`oklch(0.25 0.02 260)`), crisp electric blue accent (`oklch(0.65 0.19 250)`).
-- **Fonts**: *JetBrains Mono* / *Space Grotesk* for headers + *Inter* for body.
-- **Details**: 1px subtle borders, mono data tables, micro status badges, zero heavy blur.
-
-### B. Editorial Elegance (Knowledge Bases, Writing Tools, Notes)
-- **Palette**: Warm cream background (`oklch(0.98 0.01 60)`), charcoal text (`oklch(0.20 0.02 60)`), terracotta or forest accent.
-- **Fonts**: *Newsreader* / *Fraunces* for headings + *Plus Jakarta Sans* for body.
-- **Details**: Generous line heights (1.7), subtle serif quotes, clean horizontal dividers.
-
-### C. Modern Obsidian Dark (Vaults, Focus Utilities, Desktop Apps)
-- **Palette**: Neutral graphite (`#161618`), card elevation (`#1E1E22`), amber/gold accent (`#E5A93C`).
-- **Fonts**: *Outfit* for headings + *Segoe UI* / *Inter* for body.
-- **Details**: Smooth hover highlights, soft inset shadows, high contrast metadata badges.
-
----
-
-## 3. The 8px Spatial Grid & Elevation Token System
-
-```
-Space Tokens:
-  --space-1:  4px   (Micro padding, icon gap)
-  --space-2:  8px   (Button inline gap, badge padding)
-  --space-3: 12px   (Compact card padding, list item gap)
-  --space-4: 16px   (Standard card padding, form input spacing)
-  --space-6: 24px   (Section spacing, modal padding)
-  --space-8: 32px   (Container gutters, page margin)
-  --space-12: 48px  (Hero section padding)
-
-Elevation Borders (Prefer subtle borders over heavy drop shadows):
-  --border-subtle: 1px solid oklch(1 0 0 / 0.08)
-  --border-active: 1px solid oklch(0.65 0.19 250 / 0.5)
+/* Elevation Borders */
+--border-subtle: 1px solid oklch(1 0 0 / 0.08);
+--border-active: 1px solid oklch(0.65 0.19 250 / 0.5);
 ```
 
 ---
 
-## 4. Micro-Interactions & State Design
+## 4. Verification & Testing
 
-Every interactive element must define 4 distinct states:
-1. **Default**: Clear visual affordance (cursor-pointer, clean contrast).
-2. **Hover**: Smooth transition (150ms-200ms cubic-bezier), slight brightness or border shift.
-3. **Active / Pressed**: Subtle scale down (`scale(0.98)`).
-4. **Focus-Visible**: High-visibility outline/ring (`2px solid brand-accent`, 2px offset) for keyboard accessibility.
+Validate design quality and accessibility:
+1. **Contrast Ratio Verification:** Run Lighthouse or axe-core to ensure 100% WCAG AA compliance (min 4.5:1 for normal text).
+2. **Keyboard Navigation Check:** Tab through all interactive components; verify visible focus rings.
+3. **Responsive Grid Check:** Verify layouts scale without horizontal overflow across 320px, 768px, 1024px, and 1440px breakpoints.
 
 ---
 
-## Things to Avoid
+## 5. Common Pitfalls & Negative Constraints
 
-- Never sprinkle emojis on buttons, cards, or status indicators — use SVG icons.
-- Avoid low-contrast gray text on dark backgrounds (e.g. text `#555` on `#222` fails accessibility).
-- Avoid generic default templates across different applications.
-- Never animate elements purely for decoration; animation must guide focus or communicate state changes.
-- Avoid noisy, multi-colored rainbow gradients.
+- **Never use emojis in buttons or headers:** Always use clean SVG icons.
+- **Avoid low-contrast text:** Never place `#666` gray text on `#1a1a1a` backgrounds.
+- **Never animate without purpose:** Every animation must communicate state change or hierarchy.

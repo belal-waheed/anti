@@ -1,14 +1,11 @@
 ---
 name: animation-gsap-motion
-description: Production animation standards for Framer Motion and GSAP in React applications. Covers component enter/exit transitions, layout animations, stagger effects, GSAP ScrollTrigger timelines with useGSAP cleanup, and accessibility (prefers-reduced-motion). Use when implementing interactive UI animations or scroll experiences.
+description: Production animation standards for Framer Motion and GSAP in React applications. Covers component enter/exit transitions, layout animations, stagger effects, GSAP ScrollTrigger timelines with useGSAP cleanup, and accessibility. Use when implementing interactive UI animations or scroll experiences.
 ---
 
 # Animation Guide: Motion & GSAP for React
 
-## When to use this skill
-Trigger whenever building UI transitions, animated interactive components, scroll-triggered sequences, or micro-interactions using Framer Motion or GSAP in React.
-
----
+Production runbook for Framer Motion and GSAP in React applications.
 
 ## 1. Tool Selection Heuristic
 
@@ -19,7 +16,7 @@ Trigger whenever building UI transitions, animated interactive components, scrol
 
 ## 2. Production Motion (Framer Motion) Patterns
 
-### A. Accessible Staggered List with AnimatePresence
+### Accessible Staggered List with AnimatePresence
 ```tsx
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -27,10 +24,7 @@ const containerVariants = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
-    transition: {
-      staggerChildren: 0.08,
-      delayChildren: 0.1,
-    },
+    transition: { staggerChildren: 0.08, delayChildren: 0.1 },
   },
 };
 
@@ -46,21 +40,10 @@ const itemVariants = {
 
 export function TaskList({ tasks }: { tasks: Array<{ id: string; title: string }> }) {
   return (
-    <motion.ul
-      variants={containerVariants}
-      initial="hidden"
-      animate="visible"
-      className="space-y-2"
-    >
+    <motion.ul variants={containerVariants} initial="hidden" animate="visible" className="space-y-2">
       <AnimatePresence mode="popLayout">
         {tasks.map((task) => (
-          <motion.li
-            key={task.id}
-            variants={itemVariants}
-            exit="exit"
-            layout
-            className="p-3 rounded-lg bg-zinc-900 border border-zinc-800 text-zinc-100"
-          >
+          <motion.li key={task.id} variants={itemVariants} exit="exit" layout className="p-3 rounded-lg bg-zinc-900 border border-zinc-800 text-zinc-100">
             {task.title}
           </motion.li>
         ))}
@@ -90,7 +73,6 @@ export function HeroScrollSection() {
 
   useGSAP(
     () => {
-      // Timeline pinned to scroll
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: containerRef.current,
@@ -123,8 +105,20 @@ export function HeroScrollSection() {
 
 ---
 
-## Things to Avoid
+## 4. Verification & Testing
 
-- Never animate expensive CSS layout properties (`width`, `height`, `margin`, `top`, `left`) — only animate GPU-accelerated `transform` (`x`, `y`, `scale`, `rotate`) and `opacity`.
-- Never create GSAP animations in React without scoping/cleanup (`useGSAP` or `gsap.context()`).
-- Never ignore `prefers-reduced-motion` for users who have requested reduced motion in their OS.
+Verify animation performance and cleanup:
+1. **Render & Interaction Tests:**
+   ```bash
+   npm test -- TaskList.test.tsx
+   ```
+2. **Memory Leak / DOM Verification:** Ensure elements unmount cleanly and ScrollTrigger instances are killed on component teardown.
+3. **Reduced Motion Check:** Test in browser with `@media (prefers-reduced-motion: reduce)` enabled.
+
+---
+
+## 5. Common Pitfalls & Negative Constraints
+
+- **Never animate layout properties:** Do not animate `width`, `height`, `margin`, `top`, or `left`. Animate only GPU-accelerated `transform` (`x`, `y`, `scale`, `rotate`) and `opacity`.
+- **Never create unscoped GSAP instances:** Always wrap GSAP timelines in `useGSAP` with a `scope` ref to prevent memory leaks.
+- **Do not ignore accessibility:** Always provide fallback transitions for `prefers-reduced-motion`.

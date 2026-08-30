@@ -1,59 +1,90 @@
 ---
 name: defuddle
-description: Guidelines for task refinement, eliminating ambiguity, and breaking down complex vault projects into structured, testable action items with acceptance criteria. Trigger when refactoring workspace notes, clarifying ambiguous user requests, or organizing backlog items into actionable sprint plans.
+description: Guidelines for transforming ambiguous concepts into formal specifications (PRDs) and atomic tickets with acceptance criteria. Use when converting conversational requirements into specs, breaking down backlogs, or structuring sprint plans.
 ---
 
-# Defuddle: Task Refinement & Action Item Decomposition
+# Defuddle: Spec Shaping & Ticket Decomposition
 
-## When to use this skill
-Trigger whenever decomposing complex, ambiguous ideas, raw notes in `03-inbox/`, or high-level project goals into concrete, testable action items.
+Synthesizes PRD specification patterns with atomic task decomposition for structured engineering execution.
 
----
-
-## 1. The Defuddle 3-Step Refinement Protocol
+## 1. The 3-Phase Shaping Pipeline
 
 ```
-[Ambiguous Idea / Raw Capture]
-             │
-             ▼
-1. SCOPE & GOAL DEFINITION ──► What does "Done" look like? What is out of scope?
-             │
-             ▼
-2. DECOMPOSITION & STAGING  ──► Break into atomic tasks, tag with #now, #next, #later
-             │
-             ▼
-3. ACCEPTANCE CRITERIA      ──► Attach concrete verification checkboxes (- [ ])
+[Conversational Concept / Feature Request]
+                    │
+                    ▼
+ PHASE 1: SPECIFICATION SHAPING (/to-spec)
+ • Define scope, user value, and non-goals
+ • Map user journeys and edge cases
+ • Data models and technical constraints
+                    │
+                    ▼
+ PHASE 2: TICKET DECOMPOSITION (/to-tickets)
+ • Slice into atomic, single-responsibility tickets
+ • Assign stage tags (#now, #next, #later)
+ • Define pass/fail Acceptance Criteria
+                    │
+                    ▼
+ PHASE 3: VAULT & SPRINT ALIGNMENT
+ • Inject active tickets into inbox/Today.md (#today)
+ • Append architecture details to project hub
 ```
 
 ---
 
-## 2. Standard Task Decomposition Template
+## 2. Formal Specification Template (`PRD.md`)
+
+When executing Phase 1 (`/to-spec`):
 
 ```markdown
-### Task: [Clear Action Verb] + [Specific Component]
+# Spec: [Feature / System Name]
 
-- **Scope**: [1-sentence description of the exact change]
-- **Stage**: `#now` | `#next` | `#later`
-- **Dependencies**: [Pre-requisite tasks or None]
+## 1. Problem Statement & User Value
+- **Problem**: [Clear statement of the limitation or bug]
+- **Value**: [Who benefits and why]
+- **Non-Goals / Out of Scope**: [Explicit boundaries on excluded capabilities]
 
-#### Acceptance Criteria
-- [ ] Criteria 1: [Specific input/output or state change verified]
-- [ ] Criteria 2: [Unit or integration test added and passing]
-- [ ] Criteria 3: [Documentation or types updated]
+## 2. Technical Architecture & Constraints
+- **Layered Impact**: Router/Controller -> Service -> Repository
+- **Data Models / Schemas**: [Pydantic, Zod, or EF Core entity changes]
+- **Security / Guardrails**: [Auth, validation, rate limits]
+
+## 3. Success Metrics & Verification Gate
+- Automated test command: `npm test` / `pytest` / `dotnet test`
+- Acceptance test conditions
 ```
 
 ---
 
-## 3. Stage Lifecycles & Rules
+## 3. Ticket Decomposition Template (`/to-tickets`)
 
-- **`#now` (Active Execution)**: Max 2–3 items at any time. Must be actively worked on in the current session.
-- **`#next` (Immediate Queue)**: Ready to be picked up as soon as current `#now` items are marked complete.
-- **`#later` (Backlog / Ideas)**: Deprioritized until subsequent review or sprint planning.
+When executing Phase 2, slice the spec into atomic tickets:
+
+```markdown
+### Ticket [ID]: [Action Verb] + [Target Component]
+- **Context**: [Reference to PRD section]
+- **Stage**: `#now` (Max 2 items) | `#next` | `#later`
+- **Dependencies**: [Pre-requisite ticket IDs or None]
+
+#### Acceptance Criteria (Mandatory Verifiable Checkboxes)
+- [ ] AC-1: [Input/output or schema contract validated]
+- [ ] AC-2: [Unit test added following AAA pattern and passing]
+- [ ] AC-3: [Documentation / type definitions updated]
+```
 
 ---
 
-## Things to Avoid
+## 4. Verification & Testing
 
-- Avoid vague, un-testable action items (e.g. "- [ ] Work on API" is bad; "- [ ] Add POST /items route with Zod validation and unit tests #now" is good).
-- Avoid more than 3 active `#now` tasks simultaneously.
-- Never mark a complex task complete without verifying its acceptance criteria.
+Verify that generated tickets meet the atomic standard:
+1. Each ticket touches at most 1–3 files.
+2. Every acceptance criterion has an automated command to assert pass/fail.
+3. Total `#now` tickets does not exceed 3 concurrently.
+
+---
+
+## 5. Common Pitfalls & Negative Constraints
+
+- **Never create monolithic tickets:** If a ticket says "Build auth and UI and database", reject it and split into 3 discrete tickets.
+- **Never omit Non-Goals:** Every spec must explicitly state excluded capabilities.
+- **Never use vague criteria:** "Make it look good" is prohibited. Use "Meets WCAG AA 4.5:1 contrast and 8px spatial grid".
